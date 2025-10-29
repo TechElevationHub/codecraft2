@@ -4,6 +4,15 @@
  * Contact information, map, and operating hours
  */
 require_once 'config.php';
+
+// ✅ Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// ✅ Define login status variables
+$isLoggedIn = isset($_SESSION['user_id']);
+$userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +35,7 @@ require_once 'config.php';
             background: #f4f7fb;
         }
 
-        /* Navigation Bar - DO NOT CHANGE */
+        /* Navigation Bar - UPDATED FOR RESPONSIVENESS */
         nav {
             background: #0a2342;
             padding: 1rem 5%;
@@ -44,37 +53,183 @@ require_once 'config.php';
             margin: 0 auto;
         }
 
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-img {
+            height: 60px;
+            width: auto;
+            transition: all 0.3s ease;
+            vertical-align: middle;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
             color: #00bcd4;
             text-decoration: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border: none;
+            outline: none;
+        }
+
+        .logo:hover,
+        .logo:focus,
+        .logo:active {
+            text-decoration: none;
+            outline: none;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
             font-weight: bold;
-            transition: color 0.3s, border-bottom 0.3s;
+            transition: color 0.3s;
             padding-bottom: 2px;
         }
 
         .nav-links a:hover {
             color: #00bcd4;
-            
+        }
+
+        .user-welcome {
+            color: #fff;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: #00bcd4;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #0199b3;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            transition: 0.3s;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background: #0a2342;
+            transition: right 0.3s ease;
+            z-index: 1001;
+            padding: 2rem;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+        }
+
+        .sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #00bcd4;
+        }
+
+        .sidebar-close {
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .sidebar-links {
+            list-style: none;
+        }
+
+        .sidebar-links li {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            display: block;
+            padding: 0.5rem 0;
+        }
+
+        .sidebar-links a:hover {
+            color: #00bcd4;
+        }
+
+        .sidebar-user {
+            color: #00bcd4;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #00bcd4;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
         }
 
         /* Hero Section */
-       /* Hero Section */
-       .hero-section {
-            position: relative; /* Needed for pseudo-element positioning */
-            overflow: hidden;   /* Prevents blur from spilling outside */
+        .hero-section {
+            position: relative;
+            overflow: hidden;
             padding: 5rem 2rem;
             text-align: center;
             color: #0a2342;
@@ -89,8 +244,8 @@ require_once 'config.php';
             width: 100%;
             height: 100%;
             background: url('ContactUs.jpg') center/cover no-repeat;
-            filter: blur(3px) brightness(0.9); /* Adjust blur and brightness */
-            z-index: 0; /* Behind content */
+            filter: blur(3px) brightness(0.9);
+            z-index: 0;
         }
 
         /* Make sure text stays visible on top */
@@ -109,7 +264,7 @@ require_once 'config.php';
             font-size: 1.2rem;
             max-width: 800px;
             margin: 0 auto;
-            color: #ffffffff;
+            color: #ffff;
         }
 
         /* Content */
@@ -192,7 +347,6 @@ require_once 'config.php';
             justify-content: center;
             gap: 15px;
             margin-top: 30px;
-        
         }
 
         .social-btn {
@@ -206,17 +360,18 @@ require_once 'config.php';
             font-size: 15px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background: #0a2342;
+            color: white;
         }
 
         .social-btn i {
             font-size: 18px;
-            margin-top: 20px;
         }
 
         .social-btn:hover {
             background: #00bcd4;
+            transform: translateY(-2px);
         }
-
 
         /* Map Section */
         .map-section {
@@ -295,29 +450,29 @@ require_once 'config.php';
             font-size: 1.5rem;
         }
 
-       /* Footer */
-       footer {
-    background: #000532ff;
-    color: #fff;
-    padding: 1rem 5%;   /* reduced height (was 3rem 5%) */
-}
+        /* Footer */
+        footer {
+            background: #000532;
+            color: #fff;
+            padding: 1rem 5%;
+        }
 
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;        /* slightly tighter spacing */
-}
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
 
-.footer-section h3 {
-    color: #64b5f6;
-    margin-bottom: 0.75rem;
-}
+        .footer-section h3 {
+            color: #64b5f6;
+            margin-bottom: 0.75rem;
+        }
 
-.footer-section p {
-    margin-bottom: 0.4rem;
-}
+        .footer-section p {
+            margin-bottom: 0.4rem;
+        }
 
         .social-links {
             display: flex;
@@ -342,7 +497,7 @@ require_once 'config.php';
             border-top: 1px solid #333;
         }
 
-
+        /* Responsive Design */
         @media (max-width: 768px) {
             .hero-section h1 {
                 font-size: 2rem;
@@ -351,6 +506,29 @@ require_once 'config.php';
             .contact-cards {
                 grid-template-columns: 1fr;
             }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .user-welcome {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .logo-img {
+                height: 50px;
+            }
         }
     </style>
 </head>
@@ -358,15 +536,56 @@ require_once 'config.php';
     <!-- Navigation Bar -->
     <nav>
         <div class="nav-container">
-            <a href="user.php" class="logo">CodeCraftHub</a>
+            <a href="user.php" class="logo-container">
+                <img src="logo.jpg" alt="CodeCraftHub Logo" class="logo-img">
+                <span class="logo">CodeCraftHub</span>
+            </a>
+
+            <!-- Desktop Navigation -->
             <ul class="nav-links">
                 <li><a href="user.php">Home</a></li>
                 <li><a href="about.php">About</a></li>
                 <li><a href="contact.php">Contact</a></li>
-                <li><a href="login.php">Login</a></li>
+                <?php if ($isLoggedIn): ?>
+                    <li class="user-welcome">
+                        Welcome, <?php echo htmlspecialchars($userName); ?>!
+                        <a href="logout.php" class="logout-btn">Logout</a>
+                    </li>
+                <?php else: ?>
+                    <li><a href="login.php">Login</a></li>
+                <?php endif; ?>
             </ul>
+
+            <!-- Hamburger Menu -->
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <button class="sidebar-close" id="sidebarClose">×</button>
+        </div>
+        <ul class="sidebar-links">
+            <li><a href="user.php">Home</a></li>
+            <li><a href="about.php">About</a></li>
+            <li><a href="contact.php">Contact</a></li>
+            <?php if ($isLoggedIn): ?>
+                <li class="sidebar-user">Welcome, <?php echo htmlspecialchars($userName); ?>!</li>
+                <li><a href="logout.php" style="color: #00bcd4;">Logout</a></li>
+            <?php else: ?>
+                <li><a href="login.php">Login</a></li>
+            <?php endif; ?>
+        </ul>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -411,16 +630,16 @@ require_once 'config.php';
                 <p>Connect with us on social media</p>
                 <div class="social-buttons">
                     <a href="https://facebook.com" target="_blank" class="social-btn">
-                        <i class="fab fa-facebook-f"></i>
+                        <i class="fab fa-facebook-f"></i> Facebook
                     </a>
                     <a href="https://twitter.com" target="_blank" class="social-btn">
-                        <i class="fab fa-twitter"></i> 
+                        <i class="fab fa-twitter"></i> Twitter
                     </a>
                     <a href="https://instagram.com" target="_blank" class="social-btn">
-                        <i class="fab fa-instagram"></i> 
+                        <i class="fab fa-instagram"></i> Instagram
                     </a>
                     <a href="https://linkedin.com" target="_blank" class="social-btn">
-                        <i class="fab fa-linkedin-in"></i>
+                        <i class="fab fa-linkedin-in"></i> LinkedIn
                     </a>
                 </div>
             </div>
@@ -428,45 +647,31 @@ require_once 'config.php';
 
         <!-- Map Section -->
         <div class="map-section">
-            <h2>Find Us on the Map</h2>
+            <h2>Find Us Here</h2>
             <div class="map-container">
-                <!-- Embedded Google Map -->
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3168.6395816087!2d-122.08524908469225!3d37.38605107982516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb7495bec0189%3A0x7c17d44a466baf9b!2sSilicon%20Valley!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus"
-                    allowfullscreen="" 
-                    loading="lazy">
-                </iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.218043245623!2d-122.0842496846812!3d37.42206577982516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb24c8f25e6cd%3A0x5c97f9f5e3b4372c!2sGoogleplex!5e0!3m2!1sen!2sus!4v1605307232598!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
             </div>
-            <center>
-                <a href="https://www.google.com/maps/dir//Silicon+Valley,+CA/" target="_blank" class="directions-link">
-                    <i class="fas fa-directions"></i> Get Directions
-                </a>
-            </center>
+            <a href="https://goo.gl/maps/x9jF5Z5GjvD2" target="_blank" class="directions-link">
+                <i class="fas fa-directions"></i> Get Directions
+            </a>
         </div>
     </div>
 
     <!-- Back to Top Button -->
-    <a href="#" class="back-to-top">
-        <i class="fas fa-arrow-up"></i>
-    </a>
+    <a href="#top" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
 
-    
-    <!-- Footer -->
-    <!-- Footer -->
+   
+
+    <!-- FOOTER -->
     <footer>
         <div class="footer-container">
-            <div class="footer-section">
-                <h3>CodeCraftHub</h3>
-                <p>Your gateway to programming excellence</p>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
+            <div class="footer-section"><h3>CodeCraftHub</h3><p>Your gateway to programming excellence</p></div>
+            <div class="footer-section"><h3>Contact</h3>
                 <p><i class="fas fa-map-marker-alt"></i> 123 Tech Street, Silicon Valley, CA 94025</p>
                 <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
                 <p><i class="fas fa-envelope"></i> info@codecrafthub.com</p>
             </div>
-            <div class="footer-section">
-                <h3>Follow Us</h3>
+            <div class="footer-section"><h3>Follow Us</h3>
                 <div class="social-links">
                     <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
                     <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
@@ -475,68 +680,51 @@ require_once 'config.php';
                 </div>
             </div>
         </div>
-        <div class="copyright">
-            <p>&copy; 2025 CodeCraftHub. All rights reserved.</p>
-        </div>
+        <div class="copyright">&copy; 2025 CodeCraftHub. All rights reserved.</div>
     </footer>
 
+    <!-- Scripts -->
     <script>
-        // Check if currently open based on real-time
-        function checkOperatingHours() {
-            const now = new Date();
-            const day = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const currentTime = hours + minutes / 60;
+        // Hamburger and Sidebar toggle
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarClose = document.getElementById('sidebarClose');
+        const overlay = document.getElementById('overlay');
 
-            const statusElement = document.getElementById('status');
-
-            // Sunday (0) = Closed
-            if (day === 0) {
-                statusElement.textContent = 'Closed';
-                statusElement.className = 'status closed';
-                return;
-            }
-
-            // Monday to Friday (1-5): 9:00 AM - 6:00 PM
-            if (day >= 1 && day <= 5) {
-                if (currentTime >= 9 && currentTime < 18) {
-                    statusElement.textContent = 'Open Now';
-                    statusElement.className = 'status open';
-                } else {
-                    statusElement.textContent = 'Closed';
-                    statusElement.className = 'status closed';
-                }
-                return;
-            }
-
-            // Saturday (6): 10:00 AM - 4:00 PM
-            if (day === 6) {
-                if (currentTime >= 10 && currentTime < 16) {
-                    statusElement.textContent = 'Open Now';
-                    statusElement.className = 'status open';
-                } else {
-                    statusElement.textContent = 'Closed';
-                    statusElement.className = 'status closed';
-                }
-                return;
-            }
-        }
-
-        // Smooth scroll to top
-        document.querySelector('.back-to-top').addEventListener('click', function(e) {
-            e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
         });
 
-        // Check operating hours on page load
-        checkOperatingHours();
+        sidebarClose.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
 
-        // Update every minute
-        setInterval(checkOperatingHours, 60000);
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Operating hours status
+        function updateStatus() {
+            const statusEl = document.getElementById('status');
+            const now = new Date();
+            const day = now.getDay(); // 0 = Sunday
+            const hour = now.getHours();
+            let open = false;
+
+            if(day >= 1 && day <= 5) { // Mon-Fri
+                open = hour >= 9 && hour < 18;
+            } else if(day === 6) { // Saturday
+                open = hour >= 10 && hour < 16;
+            }
+
+            statusEl.textContent = open ? "Open Now" : "Closed";
+            statusEl.className = "status " + (open ? "open" : "closed");
+        }
+
+        updateStatus();
     </script>
 </body>
 </html>

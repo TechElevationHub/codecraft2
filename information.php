@@ -54,12 +54,43 @@ $userName = $_SESSION['username'] ?? 'User';
             margin: 0 auto;
         }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #00bcd4;
-            text-decoration: none;
-        }
+       .logo-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* space between icon and text */
+}
+
+.logo-img {
+  height: 60px; /* adjust to visually match text height */
+  width: auto;
+  transition: var(--transition);
+  vertical-align: middle;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #00bcd4;
+  text-decoration: none; /* removes underline */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: none;          /* removes borders */
+  outline: none;         /* removes focus outline */
+}
+
+/* Remove underline on hover, focus, and active states */
+.logo:hover,
+.logo:focus,
+.logo:active {
+  text-decoration: none;
+  outline: none;
+}
+
 
         .nav-links {
             display: flex;
@@ -352,7 +383,11 @@ $userName = $_SESSION['username'] ?? 'User';
     <!-- Navigation Bar -->
     <nav>
         <div class="nav-container">
-            <a href="user.php" class="logo">CodeCraftHub</a>
+
+            <a href="#" class="logo-container">
+  <img src="logo.jpg" alt="CodeCraftHub Logo" class="logo-img">
+  <span class="logo">CodeCraftHub</span>
+</a>
             <div style="display: flex; align-items: center; gap: 2rem;">
                 <ul class="nav-links" style="margin: 0;">
                     <li><a href="user.php">Home</a></li>
