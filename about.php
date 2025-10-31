@@ -175,7 +175,7 @@ $userName = $isLoggedIn ? $_SESSION['username'] : '';
     <div class="content">
         <div class="background-section">
             <h2>Our Background</h2>
-            <p>CodeCraftHub was founded in 2023 with a singular vision: to democratize programming education and make it accessible to aspiring developers worldwide. Our journey began when a group of passionate software engineers recognized the overwhelming amount of scattered resources available online and saw an opportunity to create a centralized platform that curates the best learning materials. Today, CodeCraftHub serves thousands of users globally, helping them navigate their coding education with confidence and clarity.</p>
+            <p>CodeCraftHub was founded in 2025 with a singular vision: to democratize programming education and make it accessible to aspiring developers worldwide. Our journey began when a group of passionate software engineers recognized the overwhelming amount of scattered resources available online and saw an opportunity to create a centralized platform that curates the best learning materials. Today, CodeCraftHub serves thousands of users globally, helping them navigate their coding education with confidence and clarity.</p>
         </div>
 
         <div class="mission-vision">
@@ -235,8 +235,8 @@ $userName = $isLoggedIn ? $_SESSION['username'] : '';
         <div class="footer-container">
             <div class="footer-section"><h3>CodeCraftHub</h3><p>Your gateway to programming excellence</p></div>
             <div class="footer-section"><h3>Contact</h3>
-                <p><i class="fas fa-map-marker-alt"></i> 123 Tech Street, Silicon Valley, CA 94025</p>
-                <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                <p><i class="fas fa-map-marker-alt"></i> Andries Potgieter Blvd, Vanderbijlpark 1911, <br>South Africa</p>
+                <p><i class="fas fa-phone"></i> 016 980 8053</p>
                 <p><i class="fas fa-envelope"></i> info@codecrafthub.com</p>
             </div>
             <div class="footer-section"><h3>Follow Us</h3>

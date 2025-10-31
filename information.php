@@ -657,8 +657,8 @@ $userName = $_SESSION['username'] ?? 'User';
             </div>
             <div class="footer-section">
                 <h3>Contact</h3>
-                <p><i class="fas fa-map-marker-alt"></i> 123 Tech Street, Silicon Valley, CA 94025</p>
-                <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                <p><i class="fas fa-map-marker-alt"></i> Andries Potgieter Blvd, Vanderbijlpark 1911, <br>South Africa</p>
+                <p><i class="fas fa-phone"></i> 016 980 8053</p>
                 <p><i class="fas fa-envelope"></i> info@codecrafthub.com</p>
             </div>
             <div class="footer-section">

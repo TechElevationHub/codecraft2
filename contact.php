@@ -603,14 +603,14 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                 <i class="fas fa-envelope"></i>
                 <h3>Contact Us</h3>
                 <p><strong>Email:</strong><br><a href="mailto:info@codecrafthub.com">info@codecrafthub.com</a></p>
-                <p><strong>Phone:</strong><br><a href="tel:+15551234567">+1 (555) 123-4567</a></p>
+                <p><strong>Phone:</strong><br><a href="tel:0169808053">016 980 8053</a></p>
             </div>
 
             <!-- Visit Us Card -->
             <div class="contact-card">
                 <i class="fas fa-map-marker-alt"></i>
                 <h3>Visit Us</h3>
-                <p><strong>Address:</strong><br>123 Tech Street<br>Silicon Valley, CA 94025<br>United States</p>
+                <p><strong>Address:</strong><br>Andries Potgieter Blvd<br>Vanderbijlpark 1911, <br>South Africa</p>
             </div>
 
             <!-- Operating Hours Card -->
@@ -667,8 +667,8 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         <div class="footer-container">
             <div class="footer-section"><h3>CodeCraftHub</h3><p>Your gateway to programming excellence</p></div>
             <div class="footer-section"><h3>Contact</h3>
-                <p><i class="fas fa-map-marker-alt"></i> 123 Tech Street, Silicon Valley, CA 94025</p>
-                <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                <p><i class="fas fa-map-marker-alt"></i> Andries Potgieter Blvd, Vanderbijlpark 1911, <br>South Africa</p>
+                <p><i class="fas fa-phone"></i> 016 980 8053</p>
                 <p><i class="fas fa-envelope"></i> info@codecrafthub.com</p>
             </div>
             <div class="footer-section"><h3>Follow Us</h3>
