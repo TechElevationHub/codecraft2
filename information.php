@@ -12,6 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $userName = $_SESSION['username'] ?? 'User';
+$isLoggedIn = isset($_SESSION['user_id']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -90,7 +91,6 @@ $userName = $_SESSION['username'] ?? 'User';
   text-decoration: none;
   outline: none;
 }
-
 
         .nav-links {
             display: flex;
@@ -319,52 +319,15 @@ $userName = $_SESSION['username'] ?? 'User';
 
 
        /* Footer */
-       footer {
-    background: #000532ff;
-    color: #fff;
-    padding: 1rem 5%;   /* reduced height (was 3rem 5%) */
-}
-
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;        /* slightly tighter spacing */
-}
-
-.footer-section h3 {
-    color: #64b5f6;
-    margin-bottom: 0.75rem;
-}
-
-.footer-section p {
-    margin-bottom: 0.4rem;
-}
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-links a {
-            color: #fff;
-            font-size: 1.5rem;
-            transition: color 0.3s;
-        }
-
-        .social-links a:hover {
-            color: #64b5f6;
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #333;
-        }
-
+     /* ------------------ FOOTER ------------------ */
+        footer { background: #000532; color: #fff; padding: 1rem 5%; }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .footer-section h3 { color: #64b5f6; margin-bottom: 0.75rem; }
+        .footer-section p { margin-bottom: 0.4rem; }
+        .social-links { display: flex; gap: 1rem; margin-top: 1rem; }
+        .social-links a { color: #fff; font-size: 1.5rem; transition: color 0.3s; }
+        .social-links a:hover { color: #64b5f6; }
+        .copyright { text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #333; }
 
         @media (max-width: 768px) {
             .hero-section h1 {
@@ -376,6 +339,117 @@ $userName = $_SESSION['username'] ?? 'User';
             }
         }
 
+
+  /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            transition: 0.3s;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background: #0a2342;
+            transition: right 0.3s ease;
+            z-index: 1001;
+            padding: 2rem;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+        }
+
+        .sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #00bcd4;
+        }
+
+        .sidebar-close {
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .sidebar-links {
+            list-style: none;
+        }
+
+        .sidebar-links li {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            display: block;
+            padding: 0.5rem 0;
+        }
+
+        .sidebar-links a:hover {
+            color: #00bcd4;
+        }
+
+        .sidebar-user {
+            color: #00bcd4;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #00bcd4;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Media Queries for Mobile */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .search-wrapper {
+                width: 90%;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -383,11 +457,11 @@ $userName = $_SESSION['username'] ?? 'User';
     <!-- Navigation Bar -->
     <nav>
         <div class="nav-container">
-
-            <a href="#" class="logo-container">
-  <img src="logo.jpg" alt="CodeCraftHub Logo" class="logo-img">
-  <span class="logo">CodeCraftHub</span>
-</a>
+            <a href="user.php" class="logo-container">
+                <img src="logo.jpg" alt="CodeCraftHub Logo" class="logo-img">
+                <span class="logo">CodeCraftHub</span>
+            </a>
+            
             <div style="display: flex; align-items: center; gap: 2rem;">
                 <ul class="nav-links" style="margin: 0;">
                     <li><a href="user.php">Home</a></li>
@@ -398,9 +472,37 @@ $userName = $_SESSION['username'] ?? 'User';
                 <div class="user-welcome">
                     Welcome, <?php echo htmlspecialchars($userName); ?>!
                 </div>
+                
+                <!-- Hamburger Menu -->
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </div>
     </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3 style="color: white;">Menu</h3>
+            <button class="sidebar-close" id="sidebarClose">×</button>
+        </div>
+        <ul class="sidebar-links">
+            <li><a href="user.php">Home</a></li>
+            <li><a href="about.php">About</a></li>
+            <li><a href="contact.php">Contact</a></li>
+            <?php if ($isLoggedIn): ?>
+                <li class="sidebar-user">Welcome, <?php echo htmlspecialchars($userName); ?>!</li>
+                <li><a href="logout.php" style="color: #00bcd4;">Logout</a></li>
+            <?php else: ?>
+                <li><a href="login.php">Login</a></li>
+            <?php endif; ?>
+        </ul>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
 
     <div class="languages-header">
         <h1>Programming Languages Library</h1>
@@ -1187,6 +1289,36 @@ $userName = $_SESSION['username'] ?? 'User';
     </div>
 
     <script>
+        // Sidebar functionality
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarClose = document.getElementById('sidebarClose');
+        const overlay = document.getElementById('overlay');
+
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        sidebarClose.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Close sidebar when clicking on a link (for mobile)
+        document.querySelectorAll('.sidebar-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        });
+
+        // Popup functionality
         function togglePopup(language) {
             document.getElementById("popup-" + language).style.display = "flex";
         }

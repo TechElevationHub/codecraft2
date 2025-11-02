@@ -647,15 +647,25 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 
         <!-- Map Section -->
         <div class="map-section">
-            <h2>Find Us Here</h2>
-            <div class="map-container">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.218043245623!2d-122.0842496846812!3d37.42206577982516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb24c8f25e6cd%3A0x5c97f9f5e3b4372c!2sGoogleplex!5e0!3m2!1sen!2sus!4v1605307232598!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-            <a href="https://goo.gl/maps/x9jF5Z5GjvD2" target="_blank" class="directions-link">
-                <i class="fas fa-directions"></i> Get Directions
-            </a>
-        </div>
+    <h2>Find Us Here</h2>
+    <div class="map-container">
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.527238735446!2d27.837037775279897!3d-26.706502976739234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e9525f6a2b4ab73%3A0x9e2b0aee43acfd3d!2sAndries%20Potgieter%20Blvd%2C%20Vanderbijlpark%2C%201911%2C%20South%20Africa!5e0!3m2!1sen!2sza!4v1730474756609!5m2!1sen!2sza" 
+            width="100%" 
+            height="400" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
     </div>
+    <a href="https://www.google.com/maps/place/Andries+Potgieter+Blvd,+Vanderbijlpark,+1911,+South+Africa" 
+       target="_blank" 
+       class="directions-link">
+        <i class="fas fa-directions"></i> Get Directions
+    </a>
+</div>
+
 
     <!-- Back to Top Button -->
     <a href="#top" class="back-to-top"><i class="fas fa-arrow-up"></i></a>

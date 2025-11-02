@@ -9,6 +9,10 @@ require_once 'config.php';
 $error = '';
 $success = '';
 
+// Define login status and username safely
+$isLoggedIn = isset($_SESSION['user_id']);
+$userName = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
+
 // Handle Login
 if (isset($_POST['login'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
@@ -23,9 +27,26 @@ if (isset($_POST['login'])) {
         
         // Verify password
         if (password_verify($password, $user['password'])) {
+            // Record login activity BEFORE setting session
+            $user_id = $user['id'];
+            $username = $user['username'];
+            $ip_address = $_SERVER['REMOTE_ADDR'];
+            $user_agent = mysqli_real_escape_string($conn, $_SERVER['HTTP_USER_AGENT']);
+            
+            // Insert login activity record
+            $login_activity_query = "INSERT INTO login_activity (user_id, username, ip_address, user_agent) 
+                                   VALUES ('$user_id', '$username', '$ip_address', '$user_agent')";
+            mysqli_query($conn, $login_activity_query);
+            
+            // Get the last inserted login activity ID to store in session
+            $login_activity_id = mysqli_insert_id($conn);
+            
+            // Set session variables
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['email'] = $user['email'];
+            $_SESSION['login_activity_id'] = $login_activity_id; // Store for logout tracking
+            $_SESSION['login_time'] = time(); // Store login timestamp for session duration calculation
             
             // Check if email contains @codecraft.com for admin redirect
             if (strpos($user['email'], '@codecraft.com') !== false) {
@@ -107,6 +128,10 @@ if (isset($_POST['register'])) {
         nav {
             background: #0a2342;
             padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .nav-container {
@@ -117,30 +142,173 @@ if (isset($_POST['register'])) {
             margin: 0 auto;
         }
 
+        /* Logo section */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-img {
+            height: 60px;
+            width: auto;
+            transition: all 0.3s ease;
+            vertical-align: middle;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
             color: #00bcd4;
             text-decoration: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border: none;
+            outline: none;
         }
 
+        /* Nav links */
         .nav-links {
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
             font-weight: bold;
-            transition: color 0.3s, border-bottom 0.3s;
-            padding-bottom: 2px;
+            transition: color 0.3s;
         }
 
         .nav-links a:hover {
             color: #00bcd4;
-            
+        }
+
+        .user-welcome {
+            color: #fff;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: #00bcd4;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .logout-btn:hover {
+            background: #0199b3;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            transition: 0.3s;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background: #0a2342;
+            transition: right 0.3s ease;
+            z-index: 1001;
+            padding: 2rem;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+        }
+
+        .sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #00bcd4;
+        }
+
+        .sidebar-close {
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .sidebar-links {
+            list-style: none;
+        }
+
+        .sidebar-links li {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            display: block;
+            padding: 0.5rem 0;
+        }
+
+        .sidebar-links a:hover {
+            color: #00bcd4;
+        }
+
+        .sidebar-user {
+            color: #00bcd4;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #00bcd4;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
         }
 
         /* Main Container */
@@ -269,7 +437,35 @@ if (isset($_POST['register'])) {
             display: none;
         }
 
+        .logout-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            border-radius: 6px;
+            font-weight: 600;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Media Queries for Mobile */
         @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
             .form-container {
                 flex-direction: column;
             }
@@ -281,26 +477,12 @@ if (isset($_POST['register'])) {
             .nav-links {
                 gap: 1rem;
             }
+            
+            .user-welcome {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
         }
-
-        .logout-message {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    padding: 10px;
-    margin: 20px auto;
-    width: 80%;
-    max-width: 500px;
-    text-align: center;
-    border-radius: 6px;
-    font-weight: 600;
-    animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
 
     </style>
 </head>
@@ -308,20 +490,64 @@ if (isset($_POST['register'])) {
     <!-- Navigation Bar -->
     <nav>
         <div class="nav-container">
-            <a href="user.php" class="logo">CodeCraftHub</a>
-            <ul class="nav-links">
-                <li><a href="user.php">Home</a></li>
-                <li><a href="about.php">About</a></li>
-                <li><a href="contact.php">Contact</a></li>
-            </ul>
+            <!-- Logo on the top-left -->
+            <a href="user.php" class="logo-container">
+                <img src="logo.jpg" alt="CodeCraftHub Logo" class="logo-img">
+                <span class="logo">CodeCraftHub</span>
+            </a>
+
+            <!-- Navigation links -->
+            <div style="display: flex; align-items: center; gap: 2rem;">
+                <ul class="nav-links" style="margin: 0;">
+                    <li><a href="user.php">Home</a></li>
+                    <li><a href="about.php">About</a></li>
+                    <li><a href="contact.php">Contact</a></li>
+                    <?php if ($isLoggedIn): ?>
+                        <li class="user-welcome">
+                            Welcome, <?php echo htmlspecialchars($userName); ?>!
+                            <a href="logout.php" class="logout-btn">Logout</a>
+                        </li>
+                    <?php else: ?>
+                        <li><a href="login.php">Login</a></li>
+                    <?php endif; ?>
+                </ul>
+                
+                <!-- Hamburger Menu -->
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </div>
     </nav>
 
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3 style="color: white;">Menu</h3>
+            <button class="sidebar-close" id="sidebarClose">×</button>
+        </div>
+        <ul class="sidebar-links">
+            <li><a href="user.php">Home</a></li>
+            <li><a href="about.php">About</a></li>
+            <li><a href="contact.php">Contact</a></li>
+            <?php if ($isLoggedIn): ?>
+                <li class="sidebar-user">Welcome, <?php echo htmlspecialchars($userName); ?>!</li>
+                <li><a href="logout.php" style="color: #00bcd4;">Logout</a></li>
+            <?php else: ?>
+                <li><a href="login.php">Login</a></li>
+            <?php endif; ?>
+        </ul>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
     <?php
-if (isset($_GET['message'])) {
-    echo "<div class='logout-message'>" . htmlspecialchars($_GET['message']) . "</div>";
-}
-?>
+    if (isset($_GET['message'])) {
+        echo "<div class='logout-message'>" . htmlspecialchars($_GET['message']) . "</div>";
+    }
+    ?>
 
     <!-- Main Container -->
     <div class="container">
@@ -409,6 +635,35 @@ if (isset($_GET['message'])) {
     </div>
 
     <script>
+        // Sidebar functionality
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarClose = document.getElementById('sidebarClose');
+        const overlay = document.getElementById('overlay');
+
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        sidebarClose.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Close sidebar when clicking on sidebar links
+        document.querySelectorAll('.sidebar-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        });
+
         // Show register form
         function showRegister() {
             document.getElementById('loginForm').classList.add('hide');
@@ -426,11 +681,28 @@ if (isset($_GET['message'])) {
             showRegister();
         <?php endif; ?>
 
-       setTimeout(() => {
-    const msg = document.querySelector('.logout-message');
-    if (msg) msg.style.display = 'none';
-}, 3000);
+        setTimeout(() => {
+            const msg = document.querySelector('.logout-message');
+            if (msg) msg.style.display = 'none';
+        }, 3000);
 
+        // Track session duration and send to server when page unloads
+        window.addEventListener('beforeunload', function() {
+            // Only track if user is logged in
+            <?php if ($isLoggedIn && isset($_SESSION['login_activity_id'])): ?>
+                const loginTime = <?php echo $_SESSION['login_time'] ?? 'null'; ?>;
+                if (loginTime) {
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    const sessionDuration = currentTime - loginTime;
+                    
+                    // Send session duration to server via AJAX
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'update_session_duration.php', false); // Synchronous request for reliability
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.send('login_activity_id=<?php echo $_SESSION["login_activity_id"]; ?>&session_duration=' + sessionDuration);
+                }
+            <?php endif; ?>
+        });
     </script>
 </body>
 </html>

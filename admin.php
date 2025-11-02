@@ -78,6 +78,18 @@ if (isset($_POST['action'])) {
             echo json_encode(['status'=>'deleted']); 
             exit();
 
+        case 'add_user':
+            $username = mysqli_real_escape_string($conn, $_POST['username']);
+            $email = mysqli_real_escape_string($conn, $_POST['email']);
+            $type = mysqli_real_escape_string($conn, $_POST['user_type']);
+            $password = mysqli_real_escape_string($conn, $_POST['password']);
+            
+            // Hash password
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            mysqli_query($conn, "INSERT INTO users (username, email, user_type, password) VALUES ('$username', '$email', '$type', '$hashed_password')");
+            echo json_encode(['status'=>'added']); 
+            exit();
+
         // Courses CRUD
         case 'add_course':
             $name = mysqli_real_escape_string($conn, $_POST['course_name']);
@@ -220,6 +232,25 @@ if ($user_types) {
     }
 }
 
+// Notification badges data
+$new_users_today = mysqli_query($conn, "
+    SELECT COUNT(*) as count FROM users 
+    WHERE DATE(created_at) = CURDATE()
+");
+$new_users_count = $new_users_today ? mysqli_fetch_assoc($new_users_today)['count'] : 0;
+
+$pending_messages = mysqli_query($conn, "
+    SELECT COUNT(*) as count FROM messages 
+    WHERE DATE(created_at) = CURDATE()
+");
+$pending_messages_count = $pending_messages ? mysqli_fetch_assoc($pending_messages)['count'] : 0;
+
+$expiring_courses = mysqli_query($conn, "
+    SELECT COUNT(*) as count FROM courses 
+    WHERE expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+");
+$expiring_courses_count = $expiring_courses ? mysqli_fetch_assoc($expiring_courses)['count'] : 0;
+
 // Fill default data if no records
 if (empty($chart_labels)) {
     $chart_labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -304,6 +335,7 @@ body {
 
 .sidebar-menu li {
     margin: 8px 0;
+    position: relative;
 }
 
 .sidebar-menu a {
@@ -339,6 +371,28 @@ body {
 .sidebar.collapsed .sidebar-header h2:after {
     content: "CCH";
     font-size: 1.2rem;
+}
+
+/* Notification Badges */
+.notification-badge {
+    position: absolute;
+    right: 15px;
+    top: 8px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.sidebar.collapsed .notification-badge {
+    right: 8px;
+    top: 8px;
 }
 
 /* Main Content */
@@ -593,6 +647,17 @@ body {
 .mobile-overlay.active {
     display: block;
 }
+
+/* Modal Styles */
+.modal-header {
+    background: linear-gradient(135deg, #0a2342 0%, #00bcd4 100%);
+    color: white;
+    border-bottom: none;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
 </style>
 </head>
 <body>
@@ -611,9 +676,24 @@ body {
     
     <ul class="sidebar-menu">
         <li><a href="#dashboard" class="active"><i class="fas fa-chart-line"></i> <span class="menu-text">Dashboard</span></a></li>
-        <li><a href="#users"><i class="fas fa-users"></i> <span class="menu-text">User Management</span></a></li>
-        <li><a href="#courses"><i class="fas fa-book"></i> <span class="menu-text">Courses</span></a></li>
-        <li><a href="#messages"><i class="fas fa-envelope"></i> <span class="menu-text">Messages</span></a></li>
+        <li>
+            <a href="#users"><i class="fas fa-users"></i> <span class="menu-text">User Management</span></a>
+            <?php if ($new_users_count > 0): ?>
+                <span class="notification-badge"><?php echo $new_users_count; ?></span>
+            <?php endif; ?>
+        </li>
+        <li>
+            <a href="#courses"><i class="fas fa-book"></i> <span class="menu-text">Courses</span></a>
+            <?php if ($expiring_courses_count > 0): ?>
+                <span class="notification-badge"><?php echo $expiring_courses_count; ?></span>
+            <?php endif; ?>
+        </li>
+        <li>
+            <a href="#messages"><i class="fas fa-envelope"></i> <span class="menu-text">Messages</span></a>
+            <?php if ($pending_messages_count > 0): ?>
+                <span class="notification-badge"><?php echo $pending_messages_count; ?></span>
+            <?php endif; ?>
+        </li>
         <li><a href="#analytics"><i class="fas fa-chart-bar"></i> <span class="menu-text">Analytics</span></a></li>
         <li><a href="#settings"><i class="fas fa-cog"></i> <span class="menu-text">Settings</span></a></li>
         <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> <span class="menu-text">Logout</span></a></li>
@@ -667,7 +747,7 @@ body {
                     <div class="card-value"><?php echo $user_count; ?></div>
                     <div class="card-label">Total Users</div>
                     <div class="card-trend trend-up">
-                        <i class="fas fa-arrow-up"></i> 12% from last week
+                        <i class="fas fa-arrow-up"></i> <?php echo $new_users_count; ?> new today
                     </div>
                 </div>
             </div>
@@ -691,7 +771,7 @@ body {
                     <div class="card-value"><?php echo $course_count; ?></div>
                     <div class="card-label">Total Courses</div>
                     <div class="card-trend trend-down">
-                        <i class="fas fa-exclamation-circle"></i> <?php echo $expired_count; ?> expired
+                        <i class="fas fa-exclamation-circle"></i> <?php echo $expiring_courses_count; ?> expiring soon
                     </div>
                 </div>
             </div>
@@ -1133,6 +1213,123 @@ body {
     </div>
 </div>
 
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm">
+                    <div class="mb-3">
+                        <label for="newUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="newUsername" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="newEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="newPassword" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newUserType" class="form-label">User Type</label>
+                        <select class="form-select" id="newUserType" name="user_type" required>
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveNewUser">Add User</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId" name="id">
+                    <div class="mb-3">
+                        <label for="editUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="editUsername" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserType" class="form-label">User Type</label>
+                        <select class="form-select" id="editUserType" name="user_type" required>
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveUserChanges">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View User Modal -->
+<div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewUserModalLabel">User Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="user-avatar mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;" id="viewUserAvatar">
+                    </div>
+                    <h4 id="viewUsername"></h4>
+                    <p class="text-muted" id="viewUserEmail"></p>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>User ID:</strong>
+                        <p id="viewUserId" class="text-muted"></p>
+                    </div>
+                    <div class="col-6">
+                        <strong>User Type:</strong>
+                        <p id="viewUserType" class="text-muted"></p>
+                    </div>
+                    <div class="col-6">
+                        <strong>Joined:</strong>
+                        <p id="viewUserCreated" class="text-muted"></p>
+                    </div>
+                    <div class="col-6">
+                        <strong>Status:</strong>
+                        <p><span class="badge bg-success" id="viewUserStatus">Active</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="editUserFromView">Edit User</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Toast Notification -->
 <div class="toast-container position-fixed top-0 end-0 p-3">
     <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -1332,8 +1529,15 @@ document.querySelectorAll('.edit-user').forEach(btn => {
         const email = this.dataset.email;
         const type = this.dataset.type;
         
-        // In a real application, you would open a modal or form
-        showToast(`Editing user: ${username}`, 'info');
+        // Populate edit modal
+        document.getElementById('editUserId').value = id;
+        document.getElementById('editUsername').value = username;
+        document.getElementById('editEmail').value = email;
+        document.getElementById('editUserType').value = type;
+        
+        // Show edit modal
+        const editModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+        editModal.show();
     });
 });
 
@@ -1365,6 +1569,95 @@ document.querySelectorAll('.delete-user').forEach(btn => {
             showToast('Network error occurred', 'error');
         }
     });
+});
+
+// Add new user
+document.getElementById('saveNewUser').addEventListener('click', async function() {
+    const username = document.getElementById('newUsername').value.trim();
+    const email = document.getElementById('newEmail').value.trim();
+    const password = document.getElementById('newPassword').value;
+    const userType = document.getElementById('newUserType').value;
+    
+    if (!username || !email || !password) {
+        showToast('Please fill in all fields', 'warning');
+        return;
+    }
+    
+    if (password.length < 6) {
+        showToast('Password must be at least 6 characters', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                action: 'add_user',
+                username: username,
+                email: email,
+                password: password,
+                user_type: userType
+            })
+        });
+        
+        const result = await response.json();
+        if (result.status === 'added') {
+            showToast('User added successfully', 'success');
+            // Close modal and reload page
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'));
+            modal.hide();
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast('Error adding user', 'error');
+        }
+    } catch (error) {
+        showToast('Network error occurred', 'error');
+    }
+});
+
+// Save user changes
+document.getElementById('saveUserChanges').addEventListener('click', async function() {
+    const id = document.getElementById('editUserId').value;
+    const username = document.getElementById('editUsername').value.trim();
+    const email = document.getElementById('editEmail').value.trim();
+    const userType = document.getElementById('editUserType').value;
+    
+    if (!username || !email) {
+        showToast('Please fill in all fields', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                action: 'update_user',
+                id: id,
+                username: username,
+                email: email,
+                user_type: userType
+            })
+        });
+        
+        const result = await response.json();
+        if (result.status === 'updated') {
+            showToast('User updated successfully', 'success');
+            // Close modal and reload page
+            const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
+            modal.hide();
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast('Error updating user', 'error');
+        }
+    } catch (error) {
+        showToast('Network error occurred', 'error');
+    }
 });
 
 // Course Management
@@ -1579,16 +1872,6 @@ function refreshActivity() {
         showToast('Activity data refreshed', 'success');
     }, 1000);
 }
-
-// Record session duration on page unload
-window.addEventListener('beforeunload', function() {
-    // This would typically record the session duration
-    // For demo purposes, we'll just show a toast
-    if (document.visibilityState === 'hidden') {
-        // User is leaving the page
-        showToast('Session recorded', 'info');
-    }
-});
 
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {

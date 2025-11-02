@@ -119,6 +119,8 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
             cursor: pointer;
             font-weight: 600;
             transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .logout-btn:hover {
@@ -646,7 +648,16 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
     margin-top: 1rem;
 }
 
+/* Media Queries for Mobile */
 @media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+    
+    .hamburger {
+        display: flex;
+    }
+    
     .hero h1 {
         font-size: 2.5rem;
     }
@@ -658,6 +669,11 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
     .chatbot-window {
         width: 90%;
         right: 5%;
+    }
+    
+    .user-welcome {
+        flex-direction: column;
+        gap: 0.5rem;
     }
 }
     </style>
@@ -696,7 +712,7 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h3>Menu</h3>
+            <h3 style="color: white;">Menu</h3>
             <button class="sidebar-close" id="sidebarClose">×</button>
         </div>
         <ul class="sidebar-links">
@@ -902,7 +918,6 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
 </div>
 
     <script>
-
         // Get Started button redirects correctly
         document.getElementById('getStartedBtn').addEventListener('click', function() {
             <?php if ($isLoggedIn): ?>
@@ -931,6 +946,14 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
         overlay.addEventListener('click', () => {
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
+        });
+
+        // Close sidebar when clicking on sidebar links
+        document.querySelectorAll('.sidebar-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
         });
 
         //ChatBot Script
