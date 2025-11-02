@@ -331,30 +331,29 @@ $userName = $_SESSION['username'] ?? 'User';
     margin-top: 50px;
     margin-bottom: -50vw;
 }
+ .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
 
+        .footer-section h3 {
+            color: #64b5f6;
+            margin-bottom: 0.75rem;
+            
+        }
 
-
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;        /* slightly tighter spacing */
-}
-
-.footer-section h3 {
-    color: #64b5f6;
-    margin-bottom: 0.75rem;
-}
-
-.footer-section p {
-    margin-bottom: 0.4rem;
-}
+        .footer-section p {
+            margin-bottom: 0.4rem;
+        }
 
         .social-links {
             display: flex;
             gap: 1rem;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
+            
         }
 
         .social-links a {
@@ -669,15 +668,16 @@ $userName = $_SESSION['username'] ?? 'User';
                 <p><i class="fas fa-phone"></i> 016 980 8053</p>
                 <p><i class="fas fa-envelope"></i> info@codecrafthub.com</p>
             </div>
-            <div class="footer-section">
-                <h3>Follow Us</h3>
-                <div class="social-links">
-                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
-                    <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
-                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin"></i></a>
-                </div>
-            </div>
+           <div class="footer-section" style="display: flex; flex-direction: column; align-items: flex-start;">
+    <h3 style="color: #64b5f6; margin-bottom: 0.5rem;">Follow Us</h3>
+    <div class="social-links" style="display: flex; gap: 1rem;">
+        <a href="https://facebook.com" target="_blank" style="color: #fff; font-size: 1.5rem;"><i class="fab fa-facebook"></i></a>
+        <a href="https://twitter.com" target="_blank" style="color: #fff; font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+        <a href="https://instagram.com" target="_blank" style="color: #fff; font-size: 1.5rem;"><i class="fab fa-instagram"></i></a>
+        <a href="https://linkedin.com" target="_blank" style="color: #fff; font-size: 1.5rem;"><i class="fab fa-linkedin"></i></a>
+    </div>
+</div>
+
         </div>
         <div class="copyright">
             <p>&copy; 2025 CodeCraftHub. All rights reserved.</p>
