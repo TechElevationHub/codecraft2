@@ -317,13 +317,22 @@ $userName = $_SESSION['username'] ?? 'User';
           background: #f0f0f0;
         }
 
-
-       /* Footer */
-       footer {
-    background: #000532ff;
+        footer {
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    width: 100vw;
+    background: #000532;
     color: #fff;
-    padding: 1rem 5%;   /* reduced height (was 3rem 5%) */
+    padding: 40px 20px;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: -50vw;
 }
+
+
 
 .footer-container {
     max-width: 1200px;
@@ -381,13 +390,12 @@ $userName = $_SESSION['username'] ?? 'User';
 <body>
 
     <!-- Navigation Bar -->
-    <nav>
+       <nav>
         <div class="nav-container">
-
-            <a href="#" class="logo-container">
-  <img src="logo.jpg" alt="CodeCraftHub Logo" class="logo-img">
-  <span class="logo">CodeCraftHub</span>
-</a>
+            <a href="user.php" class="logo-container">
+                <img src="logo.jpg" alt="CodeCraftHub Logo" class="logo-img">
+                <span class="logo">CodeCraftHub</span>
+            </a>
             <div style="display: flex; align-items: center; gap: 2rem;">
                 <ul class="nav-links" style="margin: 0;">
                     <li><a href="user.php">Home</a></li>
@@ -646,8 +654,8 @@ $userName = $_SESSION['username'] ?? 'User';
         </div>
        
     </div>
-
-        <!-- Footer -->
+    
+        
     <!-- Footer -->
     <footer>
         <div class="footer-container">
