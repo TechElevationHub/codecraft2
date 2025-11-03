@@ -35,7 +35,7 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             background: #f4f7fb;
         }
 
-        /* Navigation Bar - UPDATED FOR RESPONSIVENESS */
+        /* Navigation Bar */
         nav {
             background: #0a2342;
             padding: 1rem 5%;
@@ -75,18 +75,8 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             font-weight: bold;
             color: #00bcd4;
             text-decoration: none;
-            cursor: pointer;
             display: flex;
             align-items: center;
-            border: none;
-            outline: none;
-        }
-
-        .logo:hover,
-        .logo:focus,
-        .logo:active {
-            text-decoration: none;
-            outline: none;
         }
 
         .nav-links {
@@ -101,7 +91,6 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
-            padding-bottom: 2px;
         }
 
         .nav-links a:hover {
@@ -160,9 +149,7 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             box-shadow: -5px 0 15px rgba(0,0,0,0.3);
         }
 
-        .sidebar.active {
-            right: 0;
-        }
+        .sidebar.active { right: 0; }
 
         .sidebar-header {
             display: flex;
@@ -185,9 +172,7 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             list-style: none;
         }
 
-        .sidebar-links li {
-            margin-bottom: 1rem;
-        }
+        .sidebar-links li { margin-bottom: 1rem; }
 
         .sidebar-links a {
             color: white;
@@ -198,9 +183,7 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             padding: 0.5rem 0;
         }
 
-        .sidebar-links a:hover {
-            color: #00bcd4;
-        }
+        .sidebar-links a:hover { color: #00bcd4; }
 
         .sidebar-user {
             color: #00bcd4;
@@ -210,21 +193,16 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             border-bottom: 1px solid #00bcd4;
         }
 
-        /* Overlay */
         .overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.5);
             z-index: 1000;
             display: none;
         }
 
-        .overlay.active {
-            display: block;
-        }
+        .overlay.active { display: block; }
 
         /* Hero Section */
         .hero-section {
@@ -235,20 +213,16 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             color: #0a2342;
         }
 
-        /* Add your own image and blur effect */
         .hero-section::before {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: url('ContactUs.jpg') center/cover no-repeat;
             filter: blur(3px) brightness(0.9);
             z-index: 0;
         }
 
-        /* Make sure text stays visible on top */
         .hero-section h1,
         .hero-section p {
             position: relative;
@@ -264,17 +238,15 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             font-size: 1.2rem;
             max-width: 800px;
             margin: 0 auto;
-            color: #ffff;
+            color: #fff;
         }
 
-        /* Content */
         .content {
             max-width: 1200px;
             margin: 3rem auto;
             padding: 0 2rem;
         }
 
-        /* Contact Cards */
         .contact-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -308,21 +280,6 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             margin-bottom: 1rem;
         }
 
-        .contact-card p {
-            color: #555;
-            margin-bottom: 0.5rem;
-        }
-
-        .contact-card a {
-            color: #0a2342;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .contact-card a:hover {
-            color: #00bcd4;
-        }
-
         .status {
             display: inline-block;
             padding: 0.5rem 1rem;
@@ -331,16 +288,10 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             margin-top: 0.5rem;
         }
 
-        .status.open {
-            background: #4caf50;
-            color: #fff;
-        }
+        .status.open { background: #4caf50; color: #fff; }
+        .status.closed { background: #f44336; color: #fff; }
 
-        .status.closed {
-            background: #f44336;
-            color: #fff;
-        }
-
+        /* 🌐 Social Media Buttons */
         .social-buttons {
             display: flex;
             flex-wrap: wrap;
@@ -360,18 +311,32 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             font-size: 15px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            background: #0a2342;
-            color: white;
+            color: #fff;
+            border: none;
         }
 
-        .social-btn i {
-            font-size: 18px;
+        .social-btn i { font-size: 18px; }
+
+        /* Facebook */
+        .social-btn.facebook { background-color: #1877F2; }
+        .social-btn.facebook:hover { background-color: #145dbf; transform: translateY(-3px); }
+
+        /* Twitter (X) */
+        .social-btn.twitter { background-color: #1DA1F2; }
+        .social-btn.twitter:hover { background-color: #0d8ce0; transform: translateY(-3px); }
+
+        /* Instagram */
+        .social-btn.instagram {
+            background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4);
+        }
+        .social-btn.instagram:hover {
+            filter: brightness(1.1);
+            transform: translateY(-3px);
         }
 
-        .social-btn:hover {
-            background: #00bcd4;
-            transform: translateY(-2px);
-        }
+        /* LinkedIn */
+        .social-btn.linkedin { background-color: #0077B5; }
+        .social-btn.linkedin:hover { background-color: #005f8d; transform: translateY(-3px); }
 
         /* Map Section */
         .map-section {
@@ -396,11 +361,7 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             margin-bottom: 1rem;
         }
 
-        .map-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+        .map-container iframe { width: 100%; height: 100%; border: none; }
 
         .directions-link {
             display: inline-block;
@@ -416,10 +377,6 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         .directions-link:hover {
             background: #00bcd4;
             transform: translateY(-2px);
-        }
-
-        .directions-link i {
-            margin-right: 0.5rem;
         }
 
         /* Back to Top Button */
@@ -446,25 +403,13 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             transform: translateY(-5px);
         }
 
-        .back-to-top i {
-            font-size: 1.5rem;
+        footer {
+            background: #000532;
+            color: #fff;
+            padding: 1rem 5%;
         }
 
-        footer {
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    width: 100vw;
-    background: #000532;
-    color: #fff;
-    padding: 30px 20px;
-    text-align: center;
-    margin-top: 50px;
-    margin-bottom: -50vw;
-}
- .footer-container {
+        .footer-container {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
@@ -475,7 +420,6 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         .footer-section h3 {
             color: #64b5f6;
             margin-bottom: 0.75rem;
-            
         }
 
         .footer-section p {
@@ -485,8 +429,7 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         .social-links {
             display: flex;
             gap: 1rem;
-            margin-top: 0.5rem;
-            
+            margin-top: 1rem;
         }
 
         .social-links a {
@@ -499,39 +442,29 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             color: #64b5f6;
         }
 
-        /* Responsive Design */
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            justify-content: center;
+        }
+
+      
+
         @media (max-width: 768px) {
-            .hero-section h1 {
-                font-size: 2rem;
-            }
-
-            .contact-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .user-welcome {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
+            .hero-section h1 { font-size: 2rem; }
+            .contact-cards { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
         }
 
-        @media (max-width: 480px) {
-            .logo {
-                font-size: 1.5rem;
-            }
-
-            .logo-img {
-                height: 50px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -543,7 +476,6 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                 <span class="logo">CodeCraftHub</span>
             </a>
 
-            <!-- Desktop Navigation -->
             <ul class="nav-links">
                 <li><a href="user.php">Home</a></li>
                 <li><a href="about.php">About</a></li>
@@ -558,16 +490,12 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                 <?php endif; ?>
             </ul>
 
-            <!-- Hamburger Menu -->
             <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </div>
         </div>
     </nav>
 
-    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>Menu</h3>
@@ -586,21 +514,15 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         </ul>
     </div>
 
-    <!-- Overlay -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- Hero Section -->
     <section class="hero-section">
         <h1>Contact Information</h1>
-        <p>We're here to help! Reach out to us through any of the channels below. 
-           Our team is dedicated to providing you with the best support and assistance.</p>
+        <p>We're here to help! Reach out to us through any of the channels below.</p>
     </section>
 
-    <!-- Content -->
     <div class="content">
-        <!-- Contact Cards -->
         <div class="contact-cards">
-            <!-- Contact Us Card -->
             <div class="contact-card">
                 <i class="fas fa-envelope"></i>
                 <h3>Contact Us</h3>
@@ -608,14 +530,12 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                 <p><strong>Phone:</strong><br><a href="tel:0169808053">016 980 8053</a></p>
             </div>
 
-            <!-- Visit Us Card -->
             <div class="contact-card">
                 <i class="fas fa-map-marker-alt"></i>
                 <h3>Visit Us</h3>
-                <p><strong>Address:</strong><br>Andries Potgieter Blvd<br>Vanderbijlpark 1911, <br>South Africa</p>
+                <p><strong>Address:</strong><br>Andries Potgieter Blvd<br>Vanderbijlpark 1911, South Africa</p>
             </div>
 
-            <!-- Operating Hours Card -->
             <div class="contact-card">
                 <i class="fas fa-clock"></i>
                 <h3>Operating Hours</h3>
@@ -625,65 +545,52 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                 <div class="status" id="status">Checking...</div>
             </div>
 
-            <!-- Follow Us Card -->
             <div class="contact-card">
                 <i class="fas fa-share-alt"></i>
                 <h3>Follow Us</h3>
                 <p>Connect with us on social media</p>
                 <div class="social-buttons">
-                    <a href="https://facebook.com" target="_blank" class="social-btn">
+                    <a href="https://facebook.com" target="_blank" class="social-btn facebook">
                         <i class="fab fa-facebook-f"></i> Facebook
                     </a>
-                    <a href="https://twitter.com" target="_blank" class="social-btn">
+                    <a href="https://twitter.com" target="_blank" class="social-btn twitter">
                         <i class="fab fa-twitter"></i> Twitter
                     </a>
-                    <a href="https://instagram.com" target="_blank" class="social-btn">
+                    <a href="https://instagram.com" target="_blank" class="social-btn instagram">
                         <i class="fab fa-instagram"></i> Instagram
                     </a>
-                    <a href="https://linkedin.com" target="_blank" class="social-btn">
+                    <a href="https://linkedin.com" target="_blank" class="social-btn linkedin">
                         <i class="fab fa-linkedin-in"></i> LinkedIn
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Map Section -->
         <div class="map-section">
-    <h2>Find Us Here</h2>
-    <div class="map-container">
-        <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.527238735446!2d27.837037775279897!3d-26.706502976739234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e9525f6a2b4ab73%3A0x9e2b0aee43acfd3d!2sAndries%20Potgieter%20Blvd%2C%20Vanderbijlpark%2C%201911%2C%20South%20Africa!5e0!3m2!1sen!2sza!4v1730474756609!5m2!1sen!2sza" 
-            width="100%" 
-            height="400" 
-            style="border:0;" 
-            allowfullscreen="" 
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
+            <h2>Find Us Here</h2>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3330.480877!2d27.840456!3d-26.707029!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e95a14b7a3f5f65%3A0x8e0df79f69a!2sVanderbijlpark!5e0!3m2!1sen!2sza!4v1698765432101" allowfullscreen loading="lazy"></iframe>
+            </div>
+            <a href="https://maps.google.com/?q=Andries+Potgieter+Blvd,+Vanderbijlpark,+South+Africa" target="_blank" class="directions-link">Get Directions</a>
+        </div>
     </div>
-    <a href="https://www.google.com/maps/place/Andries+Potgieter+Blvd,+Vanderbijlpark,+1911,+South+Africa" 
-       target="_blank" 
-       class="directions-link">
-        <i class="fas fa-directions"></i> Get Directions
-    </a>
-</div>
 
+    <a href="#top" class="back-to-top"><i class="fas fa-chevron-up"></i></a>
 
-    <!-- Back to Top Button -->
-    <a href="#top" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
-
-   
-
-    <!-- FOOTER -->
     <footer>
         <div class="footer-container">
-            <div class="footer-section"><h3>CodeCraftHub</h3><p>Your gateway to programming excellence</p></div>
-            <div class="footer-section"><h3>Contact</h3>
+            <div class="footer-section">
+                <h3>CodeCraftHub</h3>
+                <p>Your gateway to programming excellence</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
                 <p><i class="fas fa-map-marker-alt"></i> Andries Potgieter Blvd, Vanderbijlpark 1911, <br>South Africa</p>
                 <p><i class="fas fa-phone"></i> 016 980 8053</p>
                 <p><i class="fas fa-envelope"></i> info@codecrafthub.com</p>
             </div>
-            <div class="footer-section"><h3>Follow Us</h3>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
                 <div class="social-links">
                     <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
                     <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
@@ -692,51 +599,45 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                 </div>
             </div>
         </div>
-        <div class="copyright">&copy; 2025 CodeCraftHub. All rights reserved.</div>
+        <div class="copyright">
+            <p>&copy; 2025 CodeCraftHub. All rights reserved.</p>
+        </div>
     </footer>
 
-    <!-- Scripts -->
     <script>
-        // Hamburger and Sidebar toggle
+        // Sidebar toggle
         const hamburger = document.getElementById('hamburger');
         const sidebar = document.getElementById('sidebar');
         const sidebarClose = document.getElementById('sidebarClose');
         const overlay = document.getElementById('overlay');
 
-        hamburger.addEventListener('click', () => {
-            sidebar.classList.add('active');
-            overlay.classList.add('active');
-        });
-
-        sidebarClose.addEventListener('click', () => {
+        hamburger.onclick = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+        sidebarClose.onclick = () => {
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
-        });
-
-        overlay.addEventListener('click', () => {
+        };
+        overlay.onclick = () => {
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
-        });
+        };
 
-        // Operating hours status
-        function updateStatus() {
-            const statusEl = document.getElementById('status');
-            const now = new Date();
-            const day = now.getDay(); // 0 = Sunday
-            const hour = now.getHours();
-            let open = false;
+        // Operating hours live status
+        const statusEl = document.getElementById('status');
+        const now = new Date();
+        const day = now.getDay();
+        const hour = now.getHours();
 
-            if(day >= 1 && day <= 5) { // Mon-Fri
-                open = hour >= 9 && hour < 18;
-            } else if(day === 6) { // Saturday
-                open = hour >= 10 && hour < 16;
-            }
-
-            statusEl.textContent = open ? "Open Now" : "Closed";
-            statusEl.className = "status " + (open ? "open" : "closed");
+        if ((day >= 1 && day <= 5 && hour >= 9 && hour < 18) || (day === 6 && hour >= 10 && hour < 16)) {
+            statusEl.textContent = 'Open Now';
+            statusEl.className = 'status open';
+        } else {
+            statusEl.textContent = 'Closed';
+            statusEl.className = 'status closed';
         }
-
-        updateStatus();
     </script>
 </body>
 </html>
+
