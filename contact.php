@@ -318,12 +318,23 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         .social-btn i { font-size: 18px; }
 
         /* Facebook */
-        .social-btn.facebook { background-color: #1877F2; }
-        .social-btn.facebook:hover { background-color: #145dbf; transform: translateY(-3px); }
+        .social-btn.facebook { 
+            background-color: #1877F2; 
+        }
+
+        .social-btn.facebook:hover { 
+            background-color: #145dbf; 
+            transform: translateY(-3px); 
+        }
 
         /* Twitter (X) */
-        .social-btn.twitter { background-color: #1DA1F2; }
-        .social-btn.twitter:hover { background-color: #0d8ce0; transform: translateY(-3px); }
+        .social-btn.twitter { 
+            background-color: #1DA1F2; 
+        }
+        .social-btn.twitter:hover {
+             background-color: #0d8ce0; 
+             transform: translateY(-3px); 
+            }
 
         /* Instagram */
         .social-btn.instagram {
@@ -335,8 +346,13 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         }
 
         /* LinkedIn */
-        .social-btn.linkedin { background-color: #0077B5; }
-        .social-btn.linkedin:hover { background-color: #005f8d; transform: translateY(-3px); }
+        .social-btn.linkedin { 
+            background-color: #0077B5; 
+        }
+        .social-btn.linkedin:hover { 
+            background-color: #005f8d; 
+            transform: translateY(-3px); 
+        }
 
         /* Map Section */
         .map-section {
@@ -361,7 +377,11 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             margin-bottom: 1rem;
         }
 
-        .map-container iframe { width: 100%; height: 100%; border: none; }
+        .map-container iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+        }
 
         .directions-link {
             display: inline-block;
@@ -459,10 +479,18 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
       
 
         @media (max-width: 768px) {
-            .hero-section h1 { font-size: 2rem; }
-            .contact-cards { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
-            .hamburger { display: flex; }
+            .hero-section h1 { 
+                font-size: 2rem; 
+            }
+            .contact-cards { 
+                grid-template-columns: 1fr; 
+            }
+            .nav-links { 
+                display: none; 
+            }
+            .hamburger { 
+                display: flex; 
+            }
         }
 
     </style>

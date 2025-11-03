@@ -56,41 +56,39 @@ $isLoggedIn = isset($_SESSION['user_id']);
         }
 
        .logo-container {
-  display: flex;
-  align-items: center;
-  gap: 8px; /* space between icon and text */
-}
+           display: flex;
+           align-items: center;
+           gap: 8px; 
+        }
 
-.logo-img {
-  height: 60px; /* adjust to visually match text height */
-  width: auto;
-  transition: var(--transition);
-  vertical-align: middle;
-}
+        .logo-img {
+           height: 60px; 
+           transition: var(--transition);
+           vertical-align: middle;
+        }
 
-.logo-img:hover {
-  transform: scale(1.05);
-}
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
 
-.logo {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #00bcd4;
-  text-decoration: none; /* removes underline */
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  border: none;          /* removes borders */
-  outline: none;         /* removes focus outline */
-}
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #00bcd4;
+            text-decoration: none; 
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border: none;          
+            outline: none;         
+        }
 
-/* Remove underline on hover, focus, and active states */
-.logo:hover,
-.logo:focus,
-.logo:active {
-  text-decoration: none;
-  outline: none;
-}
+        .logo:hover,
+        .logo:focus,
+        .logo:active {
+            text-decoration: none;
+            outline: none;
+        }
 
         .nav-links {
             display: flex;
@@ -319,20 +317,21 @@ $isLoggedIn = isset($_SESSION['user_id']);
 
 
         footer {
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    width: 100vw;
-    background: #000532;
-    color: #fff;
-    padding: 30px 20px;
-    text-align: center;
-    margin-top: 50px;
-    margin-bottom: -50vw;
-}
- .footer-container {
+          position: relative;
+          left: 50%;
+          right: 50%;
+          margin-left: -50vw;
+          margin-right: -50vw;
+          width: 100vw;
+          background: #000532;
+          color: #fff;
+          padding: 30px 20px;
+          text-align: center;
+          margin-top: 50px;
+          margin-bottom: -50vw;
+        }
+
+        .footer-container {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
@@ -366,7 +365,12 @@ $isLoggedIn = isset($_SESSION['user_id']);
         .social-links a:hover {
             color: #64b5f6;
         }
-        .copyright { text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #333; }
+        .copyright { 
+            text-align: center; 
+            margin-top: 2rem; 
+            padding-top: 2rem; 
+            border-top: 1px solid #333; 
+        }
 
         @media (max-width: 768px) {
             .hero-section h1 {
