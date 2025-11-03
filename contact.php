@@ -450,14 +450,21 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             font-size: 1.5rem;
         }
 
-        /* Footer */
         footer {
-            background: #000532;
-            color: #fff;
-            padding: 1rem 5%;
-        }
-
-        .footer-container {
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    width: 100vw;
+    background: #000532;
+    color: #fff;
+    padding: 30px 20px;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: -50vw;
+}
+ .footer-container {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
@@ -468,6 +475,7 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         .footer-section h3 {
             color: #64b5f6;
             margin-bottom: 0.75rem;
+            
         }
 
         .footer-section p {
@@ -477,7 +485,8 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         .social-links {
             display: flex;
             gap: 1rem;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
+            
         }
 
         .social-links a {
@@ -488,13 +497,6 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 
         .social-links a:hover {
             color: #64b5f6;
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #333;
         }
 
         /* Responsive Design */

@@ -318,15 +318,54 @@ $isLoggedIn = isset($_SESSION['user_id']);
         }
 
 
-       /* Footer */
-     /* ------------------ FOOTER ------------------ */
-        footer { background: #000532; color: #fff; padding: 1rem 5%; }
-        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-        .footer-section h3 { color: #64b5f6; margin-bottom: 0.75rem; }
-        .footer-section p { margin-bottom: 0.4rem; }
-        .social-links { display: flex; gap: 1rem; margin-top: 1rem; }
-        .social-links a { color: #fff; font-size: 1.5rem; transition: color 0.3s; }
-        .social-links a:hover { color: #64b5f6; }
+        footer {
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    width: 100vw;
+    background: #000532;
+    color: #fff;
+    padding: 30px 20px;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: -50vw;
+}
+ .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .footer-section h3 {
+            color: #64b5f6;
+            margin-bottom: 0.75rem;
+            
+        }
+
+        .footer-section p {
+            margin-bottom: 0.4rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            
+        }
+
+        .social-links a {
+            color: #fff;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #64b5f6;
+        }
         .copyright { text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #333; }
 
         @media (max-width: 768px) {
