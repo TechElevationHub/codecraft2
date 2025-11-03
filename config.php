@@ -13,7 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
 define('DB_HOST', 'localhost');     // usually 'localhost'
 define('DB_USER', 'root');          // default user for XAMPP/WAMP
 define('DB_PASS', '');              // default password (empty)
-define('DB_NAME', 'codecrafthub');  // your database name
+define('DB_NAME', 'codecrafthub.sql');  // your database name
 
 // ✅ Establish connection
 $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);

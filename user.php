@@ -811,6 +811,7 @@ $userName = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
             </div>
             <div class="chat-answer">
                 Click on the "Login" button in the navigation bar, then select "Register" to create a new account. Fill in your details and submit the form.
+                <a href="How to Login.mp4" target="_blank" class="watch-link" id="watch">Watch</a>
             </div>
         </div>
 
